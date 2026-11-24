@@ -1,0 +1,73 @@
+{
+  "name": "dsh-fold-studio",
+  "version": "1.2.0",
+  "description": "DeepSeek Harness conversation polish + native model picker: message and step folding, composer and sidebar sizing, folded-content search, turn timing, confirmed local history deletion, and a right-sidebar model switcher.",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "client-plugin",
+    "fold",
+    "collapse",
+    "transcript",
+    "ui",
+    "beautify",
+    "sidebar",
+    "composer",
+    "search",
+    "model",
+    "picker",
+    "model-picker",
+    "switcher"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "DEVELOPING.md",
+    "src",
+    "scripts/build.mjs"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "dsh": ">=0.2.2-rc.1 <0.3.0-0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "FiVE0016",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FiVE0016/dsh-fold-studio.git"
+  },
+  "homepage": "https://github.com/FiVE0016/dsh-fold-studio#readme",
+  "bugs": {
+    "url": "https://github.com/FiVE0016/dsh-fold-studio/issues"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/regression-check.mjs --fast",
+    "test:browser": "node test/rewrite-browser.mjs",
+    "check": "node scripts/regression-check.mjs",
+    "compat": "node scripts/check-host-compat.mjs"
+  }
+}
