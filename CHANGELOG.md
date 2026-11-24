@@ -1,5 +1,13 @@
 # 更新记录
 
+## 1.3.0 · 2026-11-24
+
+- **合并**：独立插件 `dsh-lessons` 并入本插件（`src/lessons.js`），由 `index.js` 在 `apply` 里安装，不再需要单独安装。系统提示段与 `record_lesson` / `list_lessons` / `retire_lesson` 三个工具的行为与独立版本一致。
+- 数据文件沿用 `~/.dsh/dsh-lessons/lessons.json`，升级不丢已有条目。
+- 教训模块整体由 `try/catch` 包裹：初始化失败只降级，不影响折叠、输入框、查找、耗时与删除。
+- **修复**：三个工具的参数在模型侧显示为 `unknown`。根因是工具定义依赖 `@deepseek-ai/dsh-tools` 的 `defineTool` 做 schema 编译，而该包由宿主在运行时提供、动态 import 在本机不稳定；兜底成 identity 后，作者 DSL 被原样注册，PTC 读不懂。现在 `parameters` 与 `output.schema` 直接写成标准 JSON Schema，不再依赖该包。诊断方式：注册后读 `tools.get(name).parameters.properties`，日志出现 `probe=schema-ok` 即通过。
+- 新增 `test/lessons.test.mjs`：空清单、工具注册、落盘、合并去重、参数校验、失效过滤、损坏文件恢复、缺 `systemPrompt` 时的降级。
+
 ## 1.2.0 · 2026-11-24
 
 - **改名**：`dsh-fold-polish` → `dsh-fold-studio`。npm 包名、GitHub 仓库、调试句柄（新 `__DSH_FOLD_STUDIO__`，旧 `__DSH_BUBBLE_FOLD__` 保留为别名）、RPC 服务名 `foldStudio`、错误码前缀 `fold-studio/`、删除日志文件名、slot id 与日志前缀全部同步更新。

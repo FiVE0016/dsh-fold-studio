@@ -1,12 +1,14 @@
 {
   "name": "dsh-fold-studio",
-  "version": "1.2.0",
-  "description": "DeepSeek Harness conversation polish + native model picker: message and step folding, composer and sidebar sizing, folded-content search, turn timing, confirmed local history deletion, and a right-sidebar model switcher.",
+  "version": "1.3.0",
+  "description": "DeepSeek Harness conversation polish + native model picker: message and step folding, composer and sidebar sizing, folded-content search, turn timing, confirmed local history deletion, a right-sidebar model switcher, and cross-session lesson memory.",
   "keywords": [
     "dsh",
     "deepseek-harness",
     "dsh-plugin",
     "client-plugin",
+    "lessons",
+    "memory",
     "fold",
     "collapse",
     "transcript",

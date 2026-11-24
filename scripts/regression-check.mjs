@@ -20,5 +20,6 @@ run([
   'test/delete-host.test.mjs',
   'test/delete-host-runtime.test.mjs',
   'test/delete-panel.test.mjs',
+  'test/lessons.test.mjs',
 ])
 if (!process.argv.includes('--fast')) run(['test/rewrite-browser.mjs'])
