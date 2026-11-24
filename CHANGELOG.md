@@ -1,5 +1,11 @@
 # 更新记录
 
+## 1.2.0 · 2026-11-24
+
+- **改名**：`dsh-fold-polish` → `dsh-fold-studio`。npm 包名、GitHub 仓库、调试句柄（新 `__DSH_FOLD_STUDIO__`，旧 `__DSH_BUBBLE_FOLD__` 保留为别名）、RPC 服务名 `foldStudio`、错误码前缀 `fold-studio/`、删除日志文件名、slot id 与日志前缀全部同步更新。
+- **新增**：右侧栏原生模型切换器（`src/model-picker.js`）。
+- 包含下方「未发布 · 2026-10-31」条目中的全部修复。
+
 ## 未发布 · 2026-10-31
 
 - 修复输入框在滚动时偶发跟随移动：移除插件附加的 sticky `top` 上边界，只保留宿主 `bottom:0` 单一底部约束；"错位时临时 fixed + 等高预留"兜底逻辑不变。

@@ -1,4 +1,4 @@
-# dsh-fold-polish · UI 美化
+# dsh-fold-studio · UI 美化
 
 DeepSeek Harness 的会话阅读插件，支持消息和工作步骤折叠、输入框调高、右栏宽度、折叠内容查找、每轮耗时，以及确认后删除本地对话记录。
 
@@ -11,13 +11,13 @@ DeepSeek Harness 的会话阅读插件，支持消息和工作步骤折叠、输
 打开「设置 → 插件 → 安装插件」，在包名输入框里填入：
 
 ```
-dsh-fold-polish
+dsh-fold-studio
 ```
 
 **方式二：命令行**
 
 ```bash
-dsh plugin add dsh-fold-polish
+dsh plugin add dsh-fold-studio
 ```
 
 安装完成后**退出并重新打开 DeepSeek Harness**，再到「设置 → 插件 → UI 美化」调整选项。

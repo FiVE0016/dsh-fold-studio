@@ -2,18 +2,18 @@ import * as fs from 'node:fs/promises'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 
-const SERVICE = 'foldPolish'
+const SERVICE = 'foldStudio'
 const EFFECT = Symbol.for('cordis.effect')
-const JOURNAL = '.dsh-fold-polish-delete.json'
-const STAGED = '.dsh-fold-polish-delete--'
+const JOURNAL = '.dsh-fold-studio-delete.json'
+const STAGED = '.dsh-fold-studio-delete--'
 const GENERATION = /^session(?:\.v[1-9][0-9]*)?\.jsonl(?:\.zstd)?$/u
-const MAGIC = 'dsh-fold-polish/local-conversation-delete/v1'
+const MAGIC = 'dsh-fold-studio/local-conversation-delete/v1'
 
 export class ConversationDeleteError extends Error {
   constructor(code, message) {
     super(message)
     this.name = 'ConversationDeleteError'
-    this.code = `fold-polish/${code}`
+    this.code = `fold-studio/${code}`
     this.details = {}
     this.isDSHRemoteError = true
   }
@@ -657,7 +657,7 @@ export function installLocalConversationDeletion(ctx) {
       service.closing = true
       await Promise.allSettled([service.ready, ...service.tasks])
     },
-    'foldPolish.pendingDeletes',
+    'foldStudio.pendingDeletes',
   )
   return service
 }

@@ -213,13 +213,13 @@ test('deletion transport uses the existing authenticated API carrier with only a
   assert.deepEqual(await remove('one'), { sessionId: 'one', deleted: true })
   const [[path, method, body]] = requests
   assert.equal(path, '/api')
-  assert.equal(method, 'foldPolish/deleteConversation')
+  assert.equal(method, 'foldStudio/deleteConversation')
   assert.deepEqual(body, { args: { sessionId: 'one' } })
 })
 
 test('transport errors stay errors instead of presenting a false deletion success', async () => {
   for (const response of [
-    { ok: false, error: { code: 'fold-polish/busy', message: '对话仍在运行' } },
+    { ok: false, error: { code: 'fold-studio/busy', message: '对话仍在运行' } },
     { value: { sessionId: 'one', deleted: true } },
     null,
   ]) {

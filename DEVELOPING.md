@@ -47,7 +47,7 @@
 
 ## 删除本地对话
 
-`sidebar.workspaces.session.menu.item` 提供原生菜单项，`shell.overlay` 独立持有确认框。确认前不发删除请求；确认后通过已有 connection RPC 载体调用 `foldPolish/deleteConversation`，参数只有对话 ID。服务端仅接受 owner 调用，并在后端重新检查任务、会话占用和持久化格式。禁止接收客户端文件路径或递归删除工作目录。
+`sidebar.workspaces.session.menu.item` 提供原生菜单项，`shell.overlay` 独立持有确认框。确认前不发删除请求；确认后通过已有 connection RPC 载体调用 `foldStudio/deleteConversation`，参数只有对话 ID。服务端仅接受 owner 调用，并在后端重新检查任务、会话占用和持久化格式。禁止接收客户端文件路径或递归删除工作目录。
 
 删除模块按本机 DSH 0.2.1-rc.2 的 JSONL、Cordis、会话和缓存契约核对。宿主没有公开的完整删除 API；关闭已打开对话需要精确匹配该轮生命周期的 effect，无法确认时拒绝删除。格式或宿主契约变更后应先重新验收，不能放宽校验强行删除。服务端相关依赖采用独立注入，不能让删除能力缺失影响显示功能。
 
@@ -67,4 +67,4 @@
 
 浏览器测试执行实际控制器，覆盖默认值、真实行数、图片布局、滚轮、长文末尾收起、步骤角色转换、搜索 Range、等长更新、输入框拖拽、右栏回弹、耗时唯一、空闲稳定性及 dispose。旧版复制测量函数和大量 fake DOM 几何断言已替换；旧版诊断 API 不作为 1.0 接口。
 
-控制台保留 `window.__DSH_FOLD_POLISH__`（同 `__DSH_BUBBLE_FOLD__`），提供 settings/update/search/revealAt/composer/rightbar/turnTimer/rescan/dispose。
+控制台保留 `window.__DSH_FOLD_STUDIO__`（同 `__DSH_BUBBLE_FOLD__`），提供 settings/update/search/revealAt/composer/rightbar/turnTimer/rescan/dispose。

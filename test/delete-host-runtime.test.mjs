@@ -154,7 +154,7 @@ test(
       deleted: true,
       principal: service.ctx.invocation?.peer?.principal?.kind,
     })
-    ctx.provide('foldPolish', service)
+    ctx.provide('foldStudio', service)
     const markers = remoteMethods(service)
     assert.equal(markers.length, 1)
     assert.equal(markers[0].method, 'deleteConversation')
@@ -163,7 +163,7 @@ test(
       markers[0].resources.session('sample-session'),
       'sample-session',
     )
-    assert.equal(service.typertRemote.namespace, 'foldPolish')
+    assert.equal(service.typertRemote.namespace, 'foldStudio')
     assert.equal(service.typertRemote.service, service)
 
     let reached = 0
@@ -179,7 +179,7 @@ test(
       invocation: { peer: { principal: { kind: 'owner' } } },
     })
     assert.deepEqual(
-      await owner.get('foldPolish').deleteConversation('sample-session'),
+      await owner.get('foldStudio').deleteConversation('sample-session'),
       {
         sessionId: 'sample-session',
         deleted: true,
@@ -190,8 +190,8 @@ test(
       invocation: { peer: { principal: { kind: 'grant' } } },
     })
     await assert.rejects(
-      guest.get('foldPolish').deleteConversation('sample-session'),
-      { code: 'fold-polish/owner-required' },
+      guest.get('foldStudio').deleteConversation('sample-session'),
+      { code: 'fold-studio/owner-required' },
     )
     assert.equal(reached, 1)
     await ctx.fiber.dispose()
@@ -222,7 +222,7 @@ test(
       assert.equal(this.ctx.invocation.peer.principal.kind, 'owner')
       return { sessionId, deleted: true }
     }
-    ctx.provide('foldPolish', service)
+    ctx.provide('foldStudio', service)
     const gateway = new TypertGatewayService(ctx, {
       websocketHeartbeatIntervalMs: 1000,
       streamInboxBytes: 1024,
@@ -234,11 +234,11 @@ test(
     const call = (
       payload,
       peer = owner,
-      endpoint = 'foldPolish/deleteConversation',
+      endpoint = 'foldStudio/deleteConversation',
     ) => gateway.dispatchRpc(endpoint, payload, signal, peer)
     try {
       assert.equal(
-        gateway.claimsEndpoint('foldPolish/deleteConversation'),
+        gateway.claimsEndpoint('foldStudio/deleteConversation'),
         true,
       )
       assert.deepEqual(await call({ args: { sessionId: 'sample-session' } }), {
@@ -247,9 +247,9 @@ test(
       })
       assert.equal(reached, 1)
       const cases = [
-        [{ args: { sessionId: '../outside' } }, 'fold-polish/invalid-session'],
-        [{ args: { sessionId: {} } }, 'fold-polish/invalid-session'],
-        [{ args: {} }, 'fold-polish/invalid-session'],
+        [{ args: { sessionId: '../outside' } }, 'fold-studio/invalid-session'],
+        [{ args: { sessionId: {} } }, 'fold-studio/invalid-session'],
+        [{ args: {} }, 'fold-studio/invalid-session'],
         [
           { args: { sessionId: 'sample-session', unexpected: 1 } },
           'gateway/arguments-invalid',
@@ -270,12 +270,12 @@ test(
         guest,
       )
       assert.equal(denied.ok, false)
-      assert.equal(denied.error.code, 'fold-polish/owner-required')
+      assert.equal(denied.error.code, 'fold-studio/owner-required')
       assert.equal(reached, 1)
       const unknown = await call(
         { args: { sessionId: 'sample-session' } },
         owner,
-        'foldPolish/unknown',
+        'foldStudio/unknown',
       )
       assert.equal(unknown.ok, false)
       assert.equal(unknown.error.code, 'gateway/invocation-unavailable')
@@ -392,12 +392,12 @@ test(
       },
     }
     service.io = io
-    ctx.provide('foldPolish', service)
+    ctx.provide('foldStudio', service)
     const owner = ctx.extend({
       invocation: { peer: { principal: { kind: 'owner' } } },
     })
     try {
-      assert.deepEqual(await owner.get('foldPolish').deleteConversation(id), {
+      assert.deepEqual(await owner.get('foldStudio').deleteConversation(id), {
         sessionId: id,
         deleted: true,
       })
@@ -570,12 +570,12 @@ test(
     ctx.accessor('invocation', { get: () => undefined })
     const deletion = new LocalConversationDeletion(ctx)
     deletion.ready = Promise.resolve()
-    ctx.provide('foldPolish', deletion)
+    ctx.provide('foldStudio', deletion)
     const owner = ctx.extend({
       invocation: { peer: { principal: { kind: 'owner' } } },
     })
     try {
-      assert.deepEqual(await owner.get('foldPolish').deleteConversation(id), {
+      assert.deepEqual(await owner.get('foldStudio').deleteConversation(id), {
         sessionId: id,
         deleted: true,
       })
@@ -599,7 +599,7 @@ test(
     )
     const ctx = new Context()
     const fiber = ctx.plugin(applyPlugin)
-    assert.equal(ctx.get('foldPolish'), undefined)
+    assert.equal(ctx.get('foldStudio'), undefined)
     const providers = {
       sessionPersistence: {
         name: 'session-persistence-jsonl',
@@ -629,15 +629,15 @@ test(
       for (const [name, value] of Object.entries(providers))
         ctx.provide(name, value)
       await new Promise((resolve) => setImmediate(resolve))
-      assert.equal(ctx.get('foldPolish'), undefined)
+      assert.equal(ctx.get('foldStudio'), undefined)
       ctx.provide('sessionProjectionCache', {})
       for (
         let attempt = 0;
-        !ctx.get('foldPolish') && attempt < 10;
+        !ctx.get('foldStudio') && attempt < 10;
         attempt += 1
       )
         await new Promise((resolve) => setImmediate(resolve))
-      const service = ctx.get('foldPolish')
+      const service = ctx.get('foldStudio')
       assert.ok(service)
       await service.ready
       assert.equal(service.pending.size, 0)
@@ -656,7 +656,7 @@ test(
       const owner = ctx.extend({
         invocation: { peer: { principal: { kind: 'owner' } } },
       })
-      const caller = owner.get('foldPolish')
+      const caller = owner.get('foldStudio')
       const accepted = caller.deleteConversation('accepted-before-reload')
       await hasEntered
       let unloadFinished = false
@@ -668,7 +668,7 @@ test(
       assert.equal(service.closing, true)
       assert.equal(service.tasks.size, 1)
       await assert.rejects(caller.deleteConversation('new-during-reload'), {
-        code: 'fold-polish/plugin-closing',
+        code: 'fold-studio/plugin-closing',
       })
       releaseAccepted()
       assert.deepEqual(await accepted, {
@@ -678,7 +678,7 @@ test(
       await unloading
       assert.equal(service.tasks.size, 0)
       assert.equal(service.pending.size, 0)
-      assert.equal(ctx.get('foldPolish'), undefined)
+      assert.equal(ctx.get('foldStudio'), undefined)
     } finally {
       releaseAccepted?.()
       await ctx.fiber.dispose()

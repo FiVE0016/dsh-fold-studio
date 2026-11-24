@@ -1851,8 +1851,8 @@ try {
         })
         await settle()
         const boot = await page(() => ({
-          status: window.__DSH_FOLD_POLISH__?.status,
-          hits: window.__DSH_FOLD_POLISH__?.search('ANSWER_HIDDEN_NEEDLE')
+          status: window.__DSH_FOLD_STUDIO__?.status,
+          hits: window.__DSH_FOLD_STUDIO__?.search('ANSWER_HIDDEN_NEEDLE')
             .length,
           expanded: window.qa.message('answer1').expanded,
           ...window.fixture.bundleSmoke,
@@ -1872,7 +1872,7 @@ try {
         await page(() => window.fixture.bundleDispose())
         await settle()
         const disposed = await page(() => ({
-          handle: Boolean(window.__DSH_FOLD_POLISH__),
+          handle: Boolean(window.__DSH_FOLD_STUDIO__),
           controls: document.querySelectorAll(
             '[data-lf-preview],[data-lf-toggle],[data-lf-step-line],[data-lf-composer-handle]',
           ).length,

@@ -6,8 +6,8 @@ import path from 'node:path'
 import { LocalConversationDeletion } from '../src/delete-host.js'
 
 const GENERATION = /^session(?:\.v[1-9][0-9]*)?\.jsonl(?:\.zstd)?$/u
-const STAGED = '.dsh-fold-polish-delete--'
-const JOURNAL = '.dsh-fold-polish-delete.json'
+const STAGED = '.dsh-fold-studio-delete--'
+const JOURNAL = '.dsh-fold-studio-delete.json'
 
 async function fixture(t, io = fs) {
   const temp = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-delete-test-'))
@@ -271,12 +271,12 @@ test('hostile IDs and non-owner calls never touch files or metadata', async (t) 
     {},
   ]) {
     await assert.rejects(f.service.deleteConversation(id), {
-      code: 'fold-polish/invalid-session',
+      code: 'fold-studio/invalid-session',
     })
   }
   f.ctx.invocation.peer.principal.kind = 'guest'
   await assert.rejects(f.service.deleteConversation(f.id), {
-    code: 'fold-polish/owner-required',
+    code: 'fold-studio/owner-required',
   })
   assert.deepEqual(f.order, [])
 })
@@ -285,18 +285,18 @@ test('running target, child runtime, migrations and pending activation fail befo
   const f = await fixture(t)
   f.agents.set(f.id, { id: f.id, status: 'running' })
   await assert.rejects(f.service.deleteConversation(f.id), {
-    code: 'fold-polish/session-busy',
+    code: 'fold-studio/session-busy',
   })
   f.agents.clear()
   f.persistence.migrationPreparations.set('other', {})
   await assert.rejects(f.service.deleteConversation(f.id), {
-    code: 'fold-polish/migration-busy',
+    code: 'fold-studio/migration-busy',
   })
   f.persistence.migrationPreparations.clear()
   for (const key of ['claims', 'resumes']) {
     f.services.sessionController.agents[key].set(f.id, Promise.resolve())
     await assert.rejects(f.service.deleteConversation(f.id), {
-      code: 'fold-polish/session-busy',
+      code: 'fold-studio/session-busy',
     })
     f.services.sessionController.agents[key].clear()
   }
@@ -309,7 +309,7 @@ test('malformed source location and symlink directories are refused before closi
     sourcePath: path.join(f.root, 'session.v4.jsonl'),
   })
   await assert.rejects(f.service.deleteConversation(f.id), {
-    code: 'fold-polish/unsafe-storage',
+    code: 'fold-studio/unsafe-storage',
   })
   const linkDir = path.join(f.root, 'project', 'chat-link')
   await fs.symlink(f.dir, linkDir, 'junction')
@@ -321,7 +321,7 @@ test('malformed source location and symlink directories are refused before closi
     sourcePath: path.join(linkDir, 'session.v4.jsonl'),
   })
   await assert.rejects(f.service.deleteConversation('chat-link'), {
-    code: 'fold-polish/unsafe-storage',
+    code: 'fold-studio/unsafe-storage',
   })
   assert.deepEqual(f.order, [])
 })
@@ -444,7 +444,7 @@ test('mismatched lifecycle metadata refuses an idle live target without touching
   f.agents.set(f.id, agent)
   f.sessions.set(f.id, agent.session)
   await assert.rejects(f.service.deleteConversation(f.id), {
-    code: 'fold-polish/unsupported-lifecycle',
+    code: 'fold-studio/unsupported-lifecycle',
   })
   assert.equal(touched, false)
   for (const name of f.names) await fs.access(path.join(f.dir, name))
@@ -459,7 +459,7 @@ test('runtime-owned child rejects deletion even when the parent is idle', async 
   f.services.agents.isOwnedBy = (id, owner) =>
     id === child.id && owner === parent
   await assert.rejects(f.service.deleteConversation(f.id), {
-    code: 'fold-polish/child-busy',
+    code: 'fold-studio/child-busy',
   })
   assert.deepEqual(f.order, [])
 })
@@ -510,7 +510,7 @@ test('committed recovery refuses to delete a newly created record under the same
   const newRecord = path.join(f.dir, 'session.v4.jsonl')
   await fs.writeFile(newRecord, 'new lifecycle must remain')
   await assert.rejects(new LocalConversationDeletion(f.ctx).recoverPending(), {
-    code: 'fold-polish/recovery-conflict',
+    code: 'fold-studio/recovery-conflict',
   })
   assert.equal(
     await fs.readFile(newRecord, 'utf8'),
@@ -524,7 +524,7 @@ test('linked history files are refused and no other file is removed', async (t) 
   const external = path.join(f.root, 'external-copy.txt')
   await fs.link(original, external)
   await assert.rejects(f.service.deleteConversation(f.id), {
-    code: 'fold-polish/unsafe-storage',
+    code: 'fold-studio/unsafe-storage',
   })
   assert.equal(await fs.readFile(external, 'utf8'), JSON.stringify(f.header))
   for (const name of f.names) await fs.access(path.join(f.dir, name))

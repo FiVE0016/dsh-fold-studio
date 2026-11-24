@@ -57,8 +57,8 @@ window.__ModuleLoader__.load({
           listeners.clear()
           if (window.__DSH_BUBBLE_FOLD__ === handle)
             delete window.__DSH_BUBBLE_FOLD__
-          if (window.__DSH_FOLD_POLISH__ === handle)
-            delete window.__DSH_FOLD_POLISH__
+          if (window.__DSH_FOLD_STUDIO__ === handle)
+            delete window.__DSH_FOLD_STUDIO__
           runtime = null
         }
         runtime = { dispose }
@@ -66,7 +66,7 @@ window.__ModuleLoader__.load({
           try {
             return fn()
           } catch (error) {
-            console.warn(`[fold-polish] ${label}不可用：`, error)
+            console.warn(`[fold-studio] ${label}不可用：`, error)
             return null
           }
         }
@@ -285,10 +285,10 @@ window.__ModuleLoader__.load({
             turnTimer: () => timers?.get() ?? {},
             dispose,
           }
-          window.__DSH_BUBBLE_FOLD__ = window.__DSH_FOLD_POLISH__ = handle
+          window.__DSH_BUBBLE_FOLD__ = window.__DSH_FOLD_STUDIO__ = handle
           return dispose
         } catch (error) {
-          console.warn('[fold-polish] 启动失败，插件已停用：', error)
+          console.warn('[fold-studio] 启动失败，插件已停用：', error)
           dispose()
           return () => {}
         }

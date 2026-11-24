@@ -125,7 +125,7 @@ export function createDeleteTransport(connection, signal) {
   return async (sessionId) => {
     const result = await connection.rpc.call(
       '/api',
-      'foldPolish/deleteConversation',
+      'foldStudio/deleteConversation',
       { args: { sessionId } },
       signal,
     )
@@ -354,13 +354,13 @@ export function installDeleteConversation({
     cleanups.push(
       register(
         'sidebar.workspaces.session.menu.item',
-        'fold-polish-delete',
+        'fold-studio-delete',
         MenuItem,
         500,
       ),
     )
     cleanups.push(
-      register('shell.overlay', 'fold-polish-delete-confirm', Dialog, 500),
+      register('shell.overlay', 'fold-studio-delete-confirm', Dialog, 500),
     )
     return dispose
   } catch (error) {

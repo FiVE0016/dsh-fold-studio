@@ -201,7 +201,7 @@ test('optional features declare separate lifetimes without blocking core startup
 test('strict restricted context boots and registers the native panel contracts', () => {
   const env = boot()
   assert.doesNotThrow(() => env.plugin.apply(env.ctx))
-  assert.equal(env.win.__DSH_FOLD_POLISH__.status, 'running')
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.status, 'running')
   const settings = env.registered.find(
     ({ options }) => options.name === 'settings.plugins.tab',
   )
@@ -216,7 +216,7 @@ test('strict restricted context boots and registers the native panel contracts',
   assert.equal(title.options.key, body.options.key)
   assert.equal(env.tabs[0].id, body.options.key)
   assert.equal(env.tabs[0].kind, body.options.key)
-  assert.equal(env.win.__DSH_FOLD_POLISH__.findTabRegistered, true)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.findTabRegistered, true)
 })
 
 test('panel API stays connected to the controller', () => {
@@ -239,7 +239,7 @@ test('apply is idempotent and disposal permits a clean restart', () => {
   off()
   off()
   assert.equal(env.stops(), 1)
-  assert.equal(env.win.__DSH_FOLD_POLISH__, undefined)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__, undefined)
   assert.equal(env.removed.length, 4)
   env.plugin.apply(env.ctx)
   assert.equal(env.starts(), 2)
@@ -250,29 +250,29 @@ test('apply is idempotent and disposal permits a clean restart', () => {
 test('missing services and blocked preference storage preserve the DOM feature', () => {
   const env = boot({ throwingStorage: true })
   assert.doesNotThrow(() => env.plugin.apply(null))
-  assert.equal(env.win.__DSH_FOLD_POLISH__.status, 'running')
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.status, 'running')
 })
 
 test('a DOM-controller failure never aborts host startup', () => {
   const env = boot({ startError: true })
   assert.doesNotThrow(() => env.plugin.apply(env.ctx))
-  assert.equal(env.win.__DSH_FOLD_POLISH__.status, 'failed')
-  assert.equal(typeof env.win.__DSH_FOLD_POLISH__.dispose, 'function')
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.status, 'failed')
+  assert.equal(typeof env.win.__DSH_FOLD_STUDIO__.dispose, 'function')
 })
 
 test('a platform resolver failure is isolated inside apply', () => {
   const env = boot({ reactError: true })
   assert.doesNotThrow(() => env.plugin.apply(env.ctx))
   assert.equal(env.starts(), 0)
-  assert.equal(env.win.__DSH_FOLD_POLISH__, undefined)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__, undefined)
 })
 
 test('a failed find seat rolls its type and prior seats back immediately', () => {
   const env = boot({ slotError: 'sidebar.right.pane.tab.title' })
   env.plugin.apply(env.ctx)
-  assert.equal(env.win.__DSH_FOLD_POLISH__.findTabRegistered, false)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.findTabRegistered, false)
   assert.deepEqual(env.removed, ['sidebar.right.pane.tab', 'tab-type'])
-  assert.equal(env.win.__DSH_FOLD_POLISH__.status, 'running')
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.status, 'running')
 })
 
 test('late right-sidebar service mounts, unmounts and remounts its three seats', () => {
@@ -280,13 +280,13 @@ test('late right-sidebar service mounts, unmounts and remounts its three seats',
   const tabs = env.services.sidebarRightTabs
   env.setService('sidebarRightTabs', undefined)
   const off = env.plugin.apply(env.ctx)
-  assert.equal(env.win.__DSH_FOLD_POLISH__.findTabRegistered, false)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.findTabRegistered, false)
   assert.equal(env.starts(), 1)
   env.setService('sidebarRightTabs', tabs)
-  assert.equal(env.win.__DSH_FOLD_POLISH__.findTabRegistered, true)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.findTabRegistered, true)
   assert.equal(env.tabs.length, 1)
   env.setService('sidebarRightTabs', undefined)
-  assert.equal(env.win.__DSH_FOLD_POLISH__.findTabRegistered, false)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.findTabRegistered, false)
   assert.deepEqual(env.removed, [
     'sidebar.right.pane.tab.title',
     'sidebar.right.pane.tab',
@@ -324,11 +324,11 @@ test('late layout provider has exactly one settings listener and restores on pro
     },
   }
   env.plugin.apply(env.ctx)
-  assert.equal(env.win.__DSH_FOLD_POLISH__.rightbar().supported, false)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.rightbar().supported, false)
   const layout = { panels: {} }
   env.setService('layout', layout)
   assert.equal(mounted, 1)
-  assert.equal(env.win.__DSH_FOLD_POLISH__.rightbar().supported, true)
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.rightbar().supported, true)
   env.controller.update({ enabled: false })
   assert.equal(refreshed, 1)
   env.setService('layout', undefined)
@@ -394,18 +394,18 @@ test('native deletion menu and confirmation mount lazily and clean up when their
   const env = boot()
   env.plugin.apply(env.ctx)
   assert.equal(
-    env.registered.some(({ options }) => options.id === 'fold-polish-delete'),
+    env.registered.some(({ options }) => options.id === 'fold-studio-delete'),
     false,
   )
   mountDeleteServices(env)
   assert.equal(
-    env.registered.filter(({ options }) => options.id === 'fold-polish-delete')
+    env.registered.filter(({ options }) => options.id === 'fold-studio-delete')
       .length,
     1,
   )
   assert.equal(
     env.registered.filter(
-      ({ options }) => options.id === 'fold-polish-delete-confirm',
+      ({ options }) => options.id === 'fold-studio-delete-confirm',
     ).length,
     1,
   )
@@ -413,7 +413,7 @@ test('native deletion menu and confirmation mount lazily and clean up when their
   env.setService('connection', undefined)
   assert.ok(env.removed.includes('sidebar.workspaces.session.menu.item'))
   assert.ok(env.removed.includes('shell.overlay'))
-  assert.equal(env.win.__DSH_FOLD_POLISH__.status, 'running')
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.status, 'running')
   env.setService('connection', {
     rpc: {
       call() {
@@ -422,7 +422,7 @@ test('native deletion menu and confirmation mount lazily and clean up when their
     },
   })
   assert.equal(
-    env.registered.filter(({ options }) => options.id === 'fold-polish-delete')
+    env.registered.filter(({ options }) => options.id === 'fold-studio-delete')
       .length,
     2,
   )
@@ -434,9 +434,9 @@ test('a missing native menu platform module cannot disable folding or leave a pa
   const env = boot({ primitivesError: true })
   env.plugin.apply(env.ctx)
   assert.doesNotThrow(() => mountDeleteServices(env))
-  assert.equal(env.win.__DSH_FOLD_POLISH__.status, 'running')
+  assert.equal(env.win.__DSH_FOLD_STUDIO__.status, 'running')
   assert.equal(
-    env.registered.some(({ options }) => options.id === 'fold-polish-delete'),
+    env.registered.some(({ options }) => options.id === 'fold-studio-delete'),
     false,
   )
   env.plugin.dispose()
